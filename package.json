@@ -2,7 +2,7 @@
 	"name": "mamba",
 	"displayName": "mamba",
 	"description": "",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"publisher": "ketong",
 	"author": {
 		"name": "ketong"
@@ -37,7 +37,7 @@
       "sidebar_yml": [
         {
           "id": "sidebar_mamba",
-          "name": "dice_yml66666",
+          "name": "dice_yml",
 					"icon": "images/icon.svg"
         }
       ]
