@@ -19,3 +19,6 @@ All notable changes to the "mamba" extension will be documented in this file.
 
 ## [0.0.5]
 - fix: 修复名称错误
+
+## [0.0.6]
+- feat: 更新version
