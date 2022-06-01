@@ -25,7 +25,7 @@ function getObjectPath() {
 /**
  * 获取文件
  */
-async function getAllFiles() {
+export function getAllFiles(): string[] {
 	const filepath = getObjectPath() + '/.dice/pipelines';
 	const files = fs.readdirSync(filepath);
 	return files;
@@ -111,17 +111,44 @@ async function createTerminal(cmd: string) {
  * 选择deploy的环境
  */
 export async function pickDeploy() {
-	const files = await getAllFiles();
+	const files = getAllFiles();
 	const result: any = await window.showQuickPick(files, {
 		title: 'yml文件选择',
 		placeHolder: '请选择yml文件',
 		// onDidSelectItem: item => window.showInformationMessage(`当前选中的是: ${item}`)
 	});
-	if(!result) {
+	if (!result) {
 		window.showInformationMessage('请选择需要deploy的yml文件');
 		return;
 	}
+
+	await deploy(result);
+}
+
+/**
+ * 选择release的环境
+ */
+export async function deployRelease() {
+	const files = getAllFiles();
+	const result: any = await window.showQuickPick(files, {
+		placeHolder: '请选择yml文件',
+		// onDidSelectItem: item => window.showInformationMessage(`当前选中的是: ${item}`)
+	});
+	if (!result) {
+		window.showInformationMessage('请选择需要deploy的yml文件');
+		return;
+	}
+
+	await release(result);
+}
+
+
+/**
+ * deploy
+ */
+export async function deploy(result: string) {
 	window.showInformationMessage(`选择执行: ${result}`);
+
 	const fileContent = await readFile('deploy.js');
 	targetEnv = result;
 	const res = await updateFile(fileContent, result);
@@ -134,19 +161,11 @@ export async function pickDeploy() {
 
 
 /**
- * 执行发布计划 deployIndex.js
+ * release
  */
-export async function deployRelease() {
-	const files = await getAllFiles();
-	const result: any = await window.showQuickPick(files, {
-		placeHolder: '请选择yml文件',
-		// onDidSelectItem: item => window.showInformationMessage(`当前选中的是: ${item}`)
-	});
-	if(!result) {
-		window.showInformationMessage('请选择需要deploy的yml文件');
-		return;
-	}
+export async function release(result: string) {
 	window.showInformationMessage(`选择执行: ${result}`);
+
 	const fileContent = await readFile('deploy/deployIndex.js');
 	const res = await updateFile(fileContent, result);
 	await writeFile('deploy/deployIndex.js', res);
@@ -155,6 +174,3 @@ export async function deployRelease() {
 
 	await restoreFile('deploy/deployIndex.js');
 }
-
-
-

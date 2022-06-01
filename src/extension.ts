@@ -3,13 +3,26 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { window, commands, ExtensionContext } from 'vscode';
-import { pickDeploy, deployRelease } from './basicInput';
+import { window, commands, ExtensionContext, workspace } from 'vscode';
+import { pickDeploy, deployRelease, release, deploy } from './basic';
 // import { multiStepInput } from './multiStepInput';
 // import { quickOpen } from './quickOpen';
+import { YmlNodeProvider, Yml } from './nodeYml';
 
 export function activate(context: ExtensionContext) {
-	context.subscriptions.push(commands.registerCommand('mamba.customFrontend', async () => {
+	const rootPath = (workspace.workspaceFolders && (workspace.workspaceFolders.length > 0))
+		? workspace.workspaceFolders[0].uri.fsPath : undefined;
+
+	const ymlNodeProvider = new YmlNodeProvider(rootPath);
+	window.registerTreeDataProvider('sidebar_mamba', ymlNodeProvider);
+	commands.registerCommand('sidebar_mamba.deployEntry', (node: Yml) => deploy(node.label));
+	commands.registerCommand('sidebar_mamba.releaseEntry', (node: Yml) => release(node.label));
+	commands.registerCommand('sidebar_mamba.refreshYml', () => {
+		ymlNodeProvider.refresh();
+		window.showInformationMessage(`Successfully called refreshYml entry.`);
+	});
+
+	context.subscriptions.push(commands.registerCommand('customFrontend', async () => {
 		const options: { [key: string]: (context: ExtensionContext) => Promise<void> } = {
 			pickDeploy,
 			deployRelease,

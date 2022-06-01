@@ -2,7 +2,7 @@
 	"name": "mamba",
 	"displayName": "mamba",
 	"description": "",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"publisher": "ketong",
 	"author": {
 		"name": "ketong"
@@ -18,16 +18,89 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:mamba.customFrontend"
+		"onCommand:customFrontend",
+		"onView:sidebar_mamba"
 	],
 	"main": "./dist/extension.js",
+	"icon": "images/icon.png",
 	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "sidebar_yml",
+					"title": "Mamba",
+					"icon": "images/icon.svg"
+				}
+			]
+		},
+		"views": {
+      "sidebar_yml": [
+        {
+          "id": "sidebar_mamba",
+          "name": "dice_yml66666",
+					"icon": "images/icon.svg"
+        }
+      ]
+		},
 		"commands": [
 			{
-				"command": "mamba.customFrontend",
+				"command": "customFrontend",
 				"title": "Custom Frontend"
+			},
+			{
+				"command": "sidebar_mamba.deployEntry",
+				"title": "Deploy",
+				"icon": {
+					"light": "resources/light/boolean.svg",
+					"dark": "resources/dark/boolean.svg"
+				}
+			},
+			{
+				"command": "sidebar_mamba.releaseEntry",
+				"title": "Release",
+				"icon": {
+					"light": "resources/light/dependency.svg",
+					"dark": "resources/dark/dependency.svg"
+				}
+			},
+			{
+				"command": "sidebar_mamba.refreshYml",
+				"title": "refreshYml",
+				"icon": {
+					"light": "resources/light/refresh.svg",
+					"dark": "resources/dark/refresh.svg"
+				}
 			}
-		]
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "sidebar_mamba.refreshYml",
+					"when": "view == sidebar_mamba",
+					"group": "navigation"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "sidebar_mamba.deployEntry",
+					"when": "view == sidebar_mamba && viewItem == yml",
+					"group": "inline"
+				},
+				{
+					"command": "sidebar_mamba.releaseEntry",
+					"when": "view == sidebar_mamba && viewItem == yml",
+					"group": "inline"
+				},
+				{
+					"command": "sidebar_mamba.deployEntry",
+					"when": "view == sidebar_mamba && viewItem == yml"
+				},
+				{
+					"command": "sidebar_mamba.releaseEntry",
+					"when": "view == sidebar_mamba && viewItem == yml"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",
@@ -38,7 +111,9 @@
 		"watch-tests": "tsc -p . -w --outDir out",
 		"pretest": "npm run compile-tests && npm run compile && npm run lint",
 		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
+		"test": "node ./out/test/runTest.js",
+		"dep-package": "vsce package",
+		"publish": "vsce publish"
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.67.0",
