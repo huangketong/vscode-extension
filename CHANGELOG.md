@@ -29,3 +29,6 @@ All notable changes to the "mamba" extension will be documented in this file.
 
 ## [0.0.8]
 - chore: 更新description
+
+## [0.0.9]
+- docs: 更新说明
