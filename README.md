@@ -2,6 +2,14 @@
 
 my first vscode extension for deploy and release.
 
+## Demo
+
+使用效果图
+![效果图](./media/desc.png)
+
+不存在yml效果图
+![错误效果图](./media/89D04044-7AD5-4644-960E-0F22C7898671.png)
+
 ## why
 
 目前有多个环境需要进行上报和发布，每次都要手动更改的 `deploy.js` 和 `node` 的执行文件。

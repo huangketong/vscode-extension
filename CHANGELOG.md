@@ -22,3 +22,10 @@ All notable changes to the "mamba" extension will be documented in this file.
 
 ## [0.0.6]
 - feat: 更新version
+
+## [0.0.7]
+- docs: 增加图片说明
+- feat: 如果根目录不存在 `.dice/pipelines` 时，在新的 `panel` 进行提示
+
+## [0.0.8]
+- chore: 更新description

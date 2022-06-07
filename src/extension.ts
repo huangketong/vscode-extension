@@ -8,10 +8,15 @@ import { pickDeploy, deployRelease, release, deploy } from './basic';
 // import { multiStepInput } from './multiStepInput';
 // import { quickOpen } from './quickOpen';
 import { YmlNodeProvider, Yml } from './nodeYml';
+import { createWebviewPanel } from './webview';
 
 export function activate(context: ExtensionContext) {
 	const rootPath = (workspace.workspaceFolders && (workspace.workspaceFolders.length > 0))
 		? workspace.workspaceFolders[0].uri.fsPath : undefined;
+
+	if (rootPath) {
+		createWebviewPanel(context);
+	}
 
 	const ymlNodeProvider = new YmlNodeProvider(rootPath);
 	window.registerTreeDataProvider('sidebar_mamba', ymlNodeProvider);
@@ -20,6 +25,7 @@ export function activate(context: ExtensionContext) {
 	commands.registerCommand('sidebar_mamba.refreshYml', () => {
 		ymlNodeProvider.refresh();
 		window.showInformationMessage(`Successfully called refreshYml entry.`);
+		createWebviewPanel(context);
 	});
 
 	context.subscriptions.push(commands.registerCommand('customFrontend', async () => {

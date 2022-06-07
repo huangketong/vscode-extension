@@ -23,10 +23,18 @@ function getObjectPath() {
 }
 
 /**
+ * 获取pipeline文件目录
+ * @returns string
+ */
+export function getPipelinePath() {
+	return getObjectPath() + '/' + '.dice/pipelines';
+}
+
+/**
  * 获取文件
  */
 export function getAllFiles(): string[] {
-	const filepath = getObjectPath() + '/.dice/pipelines';
+	const filepath = getPipelinePath();
 	const files = fs.readdirSync(filepath);
 	return files;
 	// window.showInformationMessage(`path: ${filepath} -- ${files}`);
