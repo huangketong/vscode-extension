@@ -4,11 +4,13 @@ my first vscode extension for deploy and release.
 
 ## Demo
 
-使用效果图
-![效果图](./media/desc.png)
+- 使用效果图
 
-不存在yml效果图
-![错误效果图](./media/89D04044-7AD5-4644-960E-0F22C7898671.png)
+![效果图](https://github.com/mamba-1024/vscode-extension/blob/master/media/desc.png)
+
+- 不存在yml效果图
+
+![错误效果图](https://github.com/mamba-1024/vscode-extension/blob/master/media/89D04044-7AD5-4644-960E-0F22C7898671.png)
 
 ## why
 
