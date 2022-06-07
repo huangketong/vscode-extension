@@ -1,12 +1,3 @@
-/*
- * @Author: Ketong
- * @Date: 2021-06-18 10:44:08
- * @LastEditTime: 2021-06-18 14:44:23
- * @LastEditors: Ketong
- * @Description: 通过 ast 语法分析，替换 props
- */
-
-// const fs = require('fs');
 const parser = require('@babel/parser');
 const generator = require('@babel/generator');
 const traverse = require('@babel/traverse');
