@@ -14,7 +14,7 @@ export function activate(context: ExtensionContext) {
 	const rootPath = (workspace.workspaceFolders && (workspace.workspaceFolders.length > 0))
 		? workspace.workspaceFolders[0].uri.fsPath : undefined;
 
-	if (rootPath) {
+	if (!rootPath) {
 		createWebviewPanel(context);
 	}
 
