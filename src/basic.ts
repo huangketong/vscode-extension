@@ -203,8 +203,12 @@ export async function release(result: string, pathName: string) {
 /**
  * 获取 package 文件夹下的所有文件夹名称
  */
-export function getPackagesDirNames() {
+export function getPackagesDirNames(): string[] {
 	const filepath = getObjectPath() + '/packages';
-	const files = fs.readdirSync(filepath);
-	return files;
+	if(filepath) {
+		const files = fs.readdirSync(filepath);
+		return files;
+	} else {
+		return [];
+	}
 }

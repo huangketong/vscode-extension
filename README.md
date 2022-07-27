@@ -24,6 +24,9 @@ my first vscode extension for deploy and release.
 
 ## how
 
+> #### npm 版本要求
+>由于要使用 `npm workspace`，请确保 `npm` 的版本号 大于 **7.0**，请安装 `node` 大于 `15.0`
+
 - 使用 `vscode.workspace.workspaceFolders` 项目的地址，
 - 扫描 **根目录** 和 **packages/\*** 中 `.dice/pipelines` 下的 `.yml` 文件，使用 `vscode.TreeDataProvider` 生成 `ymlNodeProvider`
 - 使用 `window.registerTreeDataProvider` 注册 `ymlNodeProvider`
