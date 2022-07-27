@@ -205,10 +205,25 @@ export async function release(result: string, pathName: string) {
  */
 export function getPackagesDirNames(): string[] {
 	const filepath = getObjectPath() + '/packages';
-	if(filepath) {
+	if(pathExists(filepath)) {
 		const files = fs.readdirSync(filepath);
 		return files;
 	} else {
 		return [];
 	}
+}
+
+/**
+ * 路径是否存在
+ * @param {string} p 
+ * @returns {boolean}
+ */
+function pathExists(p: string): boolean {
+	try {
+		fs.accessSync(p);
+	} catch (err) {
+		return false;
+	}
+
+	return true;
 }

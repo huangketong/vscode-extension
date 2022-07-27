@@ -23,9 +23,8 @@ export function activate(context: ExtensionContext) {
 
 	const nodeVersion = process.version;
 	const nodeVersionMajor = parseInt(nodeVersion.split('.')[0]);
-	if (nodeVersionMajor < 15) {
+	if (Number(nodeVersionMajor) < 15) {
 		window.showErrorMessage('Requires Node.js v15 or higher. Please update your Node.js version.');
-		return;
 	}
 
 	const ymlNodeProvider = new YmlNodeProvider(rootPath);
