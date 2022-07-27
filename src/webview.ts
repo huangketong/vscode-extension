@@ -13,7 +13,7 @@ function isExist(path: string) {
 
 export function createWebviewPanel(context: vscode.ExtensionContext) {
 
-  if (isExist(getPipelinePath())) {
+  if (isExist(getPipelinePath('/'))) {
     return;
   }
 

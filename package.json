@@ -48,8 +48,8 @@
 				"title": "Custom Frontend"
 			},
 			{
-				"command": "sidebar_mamba.deployEntry",
-				"title": "Deploy",
+				"command": "sidebar_mamba.buildEntry",
+				"title": "Build",
 				"icon": {
 					"light": "resources/light/boolean.svg",
 					"dark": "resources/dark/boolean.svg"
@@ -82,7 +82,7 @@
 			],
 			"view/item/context": [
 				{
-					"command": "sidebar_mamba.deployEntry",
+					"command": "sidebar_mamba.buildEntry",
 					"when": "view == sidebar_mamba && viewItem == yml",
 					"group": "inline"
 				},
@@ -92,7 +92,7 @@
 					"group": "inline"
 				},
 				{
-					"command": "sidebar_mamba.deployEntry",
+					"command": "sidebar_mamba.buildEntry",
 					"when": "view == sidebar_mamba && viewItem == yml"
 				},
 				{

@@ -4,8 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { window, workspace } from 'vscode';
+import { Properties } from './abstract-syntax-code';
 const fs = require('fs');
 const ast = require('./abstract-syntax-code');
+
 
 let terminalTml: any = null;
 // 目标环境
@@ -26,18 +28,17 @@ function getObjectPath() {
  * 获取pipeline文件目录
  * @returns string
  */
-export function getPipelinePath() {
-	return getObjectPath() + '/' + '.dice/pipelines';
+export function getPipelinePath(path: string) {
+	return getObjectPath() + path + '.dice/pipelines';
 }
 
 /**
  * 获取文件
  */
-export function getAllFiles(): string[] {
-	const filepath = getPipelinePath();
+export function getAllFiles(path: string): string[] {
+	const filepath = getPipelinePath(path);
 	const files = fs.readdirSync(filepath);
 	return files;
-	// window.showInformationMessage(`path: ${filepath} -- ${files}`);
 }
 
 // 生成copy名称
@@ -49,13 +50,13 @@ function getCopyName(name: string) {
  * 读取文件
  * 拷贝留存一份
  */
-async function readFile(name: string) {
-	const filepath = getObjectPath() + '/' + name;
+async function readFile(name: string, path: string) {
+	const filepath = getObjectPath() + path + name;
 	const file = fs.readFileSync(filepath, 'utf8');
 
 	// 拷贝文件
 	try {
-		fs.copyFileSync(filepath, getObjectPath() + '/' + getCopyName(name));
+		fs.copyFileSync(filepath, getObjectPath() + path + getCopyName(name));
 		// console.log(name + ' was copied to ' + getCopyName(name));
 	} catch (error) {
 		console.error('copy error');
@@ -67,12 +68,12 @@ async function readFile(name: string) {
 /**
  * 恢复deploy.js文件
  */
-async function restoreFile(name: string) {
-	const filepath = getObjectPath() + '/' + getCopyName(name);
+async function restoreFile(name: string, path: string) {
+	const filepath = getObjectPath() + path + getCopyName(name);
 	// 拷贝文件
 	try {
 		setTimeout(() => {
-			fs.copyFileSync(filepath, getObjectPath() + '/' + name);
+			fs.copyFileSync(filepath, getObjectPath() + path + name);
 			// console.log(name + ' was restored from ' + getCopyName(name));
 			// 删除备份文件
 			fs.unlinkSync(filepath);
@@ -83,9 +84,11 @@ async function restoreFile(name: string) {
 }
 
 /**
- * 修改deploy.js文件
+ * 修改打包文件的变量
+ * @param {any} content 文件内容
+ * @param {Properties} properties 属性
  */
-async function updateFile(content: any, properties: any) {
+async function updateFile(content: any, properties: Properties) {
 	const res = await ast.parser(content, properties);
 	return res;
 }
@@ -94,7 +97,7 @@ async function updateFile(content: any, properties: any) {
  * 重新写入文件
  */
 async function writeFile(path: string, content: any) {
-	const filepath = getObjectPath() + '/' + path;
+	const filepath = getObjectPath() + path;
 	fs.writeFileSync(filepath, content, 'utf8');
 }
 
@@ -116,69 +119,92 @@ async function createTerminal(cmd: string) {
 }
 
 /**
- * 选择deploy的环境
+ * 选择 build 的环境
  */
-export async function pickDeploy() {
-	const files = getAllFiles();
-	const result: any = await window.showQuickPick(files, {
-		title: 'yml文件选择',
-		placeHolder: '请选择yml文件',
-		// onDidSelectItem: item => window.showInformationMessage(`当前选中的是: ${item}`)
-	});
-	if (!result) {
-		window.showInformationMessage('请选择需要deploy的yml文件');
-		return;
-	}
+// export async function pickDeploy() {
+// 	const files = getAllFiles();
+// 	const result: any = await window.showQuickPick(files, {
+// 		title: 'yml文件选择',
+// 		placeHolder: '请选择yml文件',
+// 		// onDidSelectItem: item => window.showInformationMessage(`当前选中的是: ${item}`)
+// 	});
+// 	if (!result) {
+// 		window.showInformationMessage('请选择需要deploy的yml文件');
+// 		return;
+// 	}
 
-	await deploy(result);
-}
+// 	await build(result);
+// }
 
 /**
  * 选择release的环境
  */
-export async function deployRelease() {
-	const files = getAllFiles();
-	const result: any = await window.showQuickPick(files, {
-		placeHolder: '请选择yml文件',
-		// onDidSelectItem: item => window.showInformationMessage(`当前选中的是: ${item}`)
-	});
-	if (!result) {
-		window.showInformationMessage('请选择需要deploy的yml文件');
-		return;
-	}
+// export async function deployRelease() {
+// 	const files = getAllFiles();
+// 	const result: any = await window.showQuickPick(files, {
+// 		placeHolder: '请选择yml文件',
+// 		// onDidSelectItem: item => window.showInformationMessage(`当前选中的是: ${item}`)
+// 	});
+// 	if (!result) {
+// 		window.showInformationMessage('请选择需要deploy的yml文件');
+// 		return;
+// 	}
 
-	await release(result);
-}
+// 	await release(result);
+// }
 
 
 /**
- * deploy
+ * build 文件打包
+ * @param name 文件名 eg: mix-prod.yml
+ * @param pathName 文件路径 eg: /packages/notice/
  */
-export async function deploy(result: string) {
-	window.showInformationMessage(`选择执行: ${result}`);
-
-	const fileContent = await readFile('deploy.js');
+export async function build(result: string, pathName: string) {
+	window.showInformationMessage(`pathName: ${pathName}`);
+	window.showInformationMessage(`选择执行: ${pathName}.dice/pipelines/${result}`);
+	// 读取文件内容
+	const fileContent = await readFile('deploy.js', pathName);
+	// 记录执行环境
 	targetEnv = result;
-	const res = await updateFile(fileContent, result);
-	await writeFile('deploy.js', res);
+	// 更新文件
+	const res = await updateFile(fileContent, { yml: result });
+	// 写入更新后的内容
+	await writeFile(`${pathName}deploy.js`, res);
+	/**
+	 * 执行终端命令，打包文件，对应 packages/** 目录下的文件
+	 * 两种方式，此处直接选择第二种，去掉 pathName 最后的 / 号即可直接使用
+	 	* 1. npm run <script-name> -w a
+		* 2. npm run <script-name> -w ./packages/a
+	 */
+	const cmd = pathName === '/' ? 'npm run deployTest' : `npm run deployTest -w .${pathName.substring(0, pathName.length - 1)}`;
 
-	await createTerminal('npm run deployTest');
-
-	await restoreFile('deploy.js');
+	await createTerminal(cmd);
+	// 恢复文件
+	await restoreFile('deploy.js', pathName);
 }
 
 
 /**
  * release
  */
-export async function release(result: string) {
-	window.showInformationMessage(`选择执行: ${result}`);
+export async function release(result: string, pathName: string) {
+	window.showInformationMessage(`pathName: ${pathName}`);
+	window.showInformationMessage(`选择执行: ${pathName}.dice/pipelines/${result}`);
 
-	const fileContent = await readFile('deploy/deployIndex.js');
-	const res = await updateFile(fileContent, result);
-	await writeFile('deploy/deployIndex.js', res);
+	const fileContent = await readFile('deploy/deployIndex.js', '/');
+	const res = await updateFile(fileContent, { yml: result, ymlPath: pathName });
+	await writeFile('/deploy/deployIndex.js', res);
 
 	await createTerminal('node deploy/deployIndex.js');
 
-	await restoreFile('deploy/deployIndex.js');
+	await restoreFile('deploy/deployIndex.js', '/');
+}
+
+/**
+ * 获取 package 文件夹下的所有文件夹名称
+ */
+export function getPackagesDirNames() {
+	const filepath = getObjectPath() + '/packages';
+	const files = fs.readdirSync(filepath);
+	return files;
 }

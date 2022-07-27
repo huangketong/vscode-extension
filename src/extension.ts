@@ -4,7 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { window, commands, ExtensionContext, workspace } from 'vscode';
-import { pickDeploy, deployRelease, release, deploy } from './basic';
+import {
+	// pickDeploy, deployRelease, 
+	release, build
+} from './basic';
 // import { multiStepInput } from './multiStepInput';
 // import { quickOpen } from './quickOpen';
 import { YmlNodeProvider, Yml } from './nodeYml';
@@ -20,30 +23,30 @@ export function activate(context: ExtensionContext) {
 
 	const ymlNodeProvider = new YmlNodeProvider(rootPath);
 	window.registerTreeDataProvider('sidebar_mamba', ymlNodeProvider);
-	commands.registerCommand('sidebar_mamba.deployEntry', (node: Yml) => deploy(node.label));
-	commands.registerCommand('sidebar_mamba.releaseEntry', (node: Yml) => release(node.label));
+	commands.registerCommand('sidebar_mamba.buildEntry', (node: Yml) => build(node.label, node.pathName));
+	commands.registerCommand('sidebar_mamba.releaseEntry', (node: Yml) => release(node.label, node.pathName));
 	commands.registerCommand('sidebar_mamba.refreshYml', () => {
 		ymlNodeProvider.refresh();
 		window.showInformationMessage(`Successfully called refreshYml entry.`);
 		createWebviewPanel(context);
 	});
 
-	context.subscriptions.push(commands.registerCommand('customFrontend', async () => {
-		const options: { [key: string]: (context: ExtensionContext) => Promise<void> } = {
-			pickDeploy,
-			deployRelease,
-			// multiStepInput,
-			// quickOpen,
-		};
-		const quickPick = window.createQuickPick();
-		quickPick.items = Object.keys(options).map(label => ({ label }));
-		quickPick.onDidChangeSelection(selection => {
-			if (selection[0]) {
-				options[selection[0].label](context)
-					.catch(console.error);
-			}
-		});
-		quickPick.onDidHide(() => quickPick.dispose());
-		quickPick.show();
-	}));
+	// context.subscriptions.push(commands.registerCommand('customFrontend', async () => {
+	// 	const options: { [key: string]: (context: ExtensionContext) => Promise<void> } = {
+	// 		pickDeploy,
+	// 		deployRelease,
+	// 		// multiStepInput,
+	// 		// quickOpen,
+	// 	};
+	// 	const quickPick = window.createQuickPick();
+	// 	quickPick.items = Object.keys(options).map(label => ({ label }));
+	// 	quickPick.onDidChangeSelection(selection => {
+	// 		if (selection[0]) {
+	// 			options[selection[0].label](context)
+	// 				.catch(console.error);
+	// 		}
+	// 	});
+	// 	quickPick.onDidHide(() => quickPick.dispose());
+	// 	quickPick.show();
+	// }));
 }
