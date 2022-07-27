@@ -2,6 +2,10 @@
 
 All notable changes to the "mamba" extension will be documented in this file.
 
+## [0.1.0]
+- feat: 🆕🔥新增支持 `package` 下的模块 `build（打包）`🚀 和 `release（发布）`🚀
+- docs: 💄 更新说明文档 ✅
+
 ## [0.0.12]
 - fix: 修复问题
 - docs: 更新changelog
