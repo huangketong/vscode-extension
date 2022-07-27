@@ -2,7 +2,7 @@
 	"name": "mamba",
 	"displayName": "mamba",
 	"description": "vscode extension for deploy and release with yml",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"publisher": "ketong",
 	"author": {
 		"name": "ketong"
